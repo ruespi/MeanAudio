@@ -58,7 +58,7 @@ class WavTextClipsDataset(Dataset):
                     self.captions[id].append(caption)
 
         # read the clip tsv
-        df_list = pd.read_csv(clips_tsv, sep='\t', dtype={
+        df_list = pd.read_csv(clips_tsv, sep=',', dtype={
             'id': str,
             'name': str
         }).to_dict('records')

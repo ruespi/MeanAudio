@@ -1,3 +1,10 @@
+data
+weights
+av-benchmark
+
+uv.lock
+.python-version
+
 run_*.sh
 log/
 saves

@@ -1,3 +1,18 @@
+# yt8m
+YT8M_npz:
+  tag: train/
+  tsv: # TODO
+  npz_dir: # TODO
+
+# MusicCaps
+MusicCaps_npz:
+  tag: test
+  tsv: data/musiccaps/test-memmap.tsv
+  npz_dir: data/musiccaps/musiccaps-test-npz
+  output_subdir: null
+  repa_npz_dir: null
+  gt_cache: data/musiccaps/musiccaps-test-features
+
 # AudioCaps 
 AudioCaps_npz: 
   tag: train

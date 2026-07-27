@@ -100,7 +100,8 @@ def main():
     seq_cfg.duration = duration
     net.update_seq_lengths(seq_cfg.latent_seq_len)
 
-    eval_file =  './sets/test-audiocaps.tsv' 
+    # TODO change this
+    eval_file =  './data/musiccaps/musiccaps-captions-eval.tsv' 
     audio_ids=[]  
     text_prompts=[]
     with open(eval_file, 'r') as f:

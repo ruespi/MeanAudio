@@ -68,6 +68,6 @@ for audio_file in tqdm(audio_files):
 output_dir.parent.mkdir(parents=True, exist_ok=True)
 print(len(output_data))
 output_df = pd.DataFrame(output_data, columns=['id', 'name', 'start_sample', 'end_sample'])
-output_df.to_csv(output_dir, index=False, sep='\t')
+output_df.to_csv(output_dir, index=False, sep=',')
 
 print(f" Jumping {jump} audio files .. ")
