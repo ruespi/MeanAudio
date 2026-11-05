@@ -2,11 +2,13 @@ export CUDA_VISIBLE_DEVICES=4,5,6,7
 
 NUM_GPUS=$(echo ${CUDA_VISIBLE_DEVICES:-""} | tr ',' '\n' | wc -l)
 btz=32
-num_iterations=200_000
-exp_id=AC_bsz${btz}_numgpus${NUM_GPUS}_niter${num_iterations}_T5_CLAP_meanflow
+num_iterations=3000
+mode=meanflow
+#exp_id=AC_bsz${btz}_numgpus${NUM_GPUS}_niter${num_iterations}_T5_CLAP_${mode}\
+exp_id=MA_scratch_mf_4gpu_3kiter
 
 text_encoder_name=t5_clap
-weights=./weights/fluxaudio_s_full.pth   # pre-trained weigths to be loaded for mix-field finetuning
+#weights=./weights/fluxaudio_s_full.pth   # pre-trained weigths to be loaded for mix-field finetuning
 
 text_c_dim=512   # 1024 + 512
 model=meanaudio_s # meanaudio_s, fluxaudio_s
@@ -27,7 +29,8 @@ torchrun --standalone --nproc_per_node=$NUM_GPUS \
     pin_memory=False \
     num_workers=10 \
     ac_oversample_rate=5 \
-    weights=$weights \
+    meanflow_mode=${mode} \
     ++use_rope=True \
     ++use_wandb=True \
     ++debug=False
+    #weights=$weights \

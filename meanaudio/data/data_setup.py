@@ -43,7 +43,14 @@ def setup_training_datasets(cfg: DictConfig) -> tuple[Dataset, DistributedSample
             
     else: 
 
-        audiocaps_npz = load_audio_data(cfg, cfg.data.AudioCaps_npz) 
+        train_datasets = cfg.use_data.get('train', [])
+        assert len(train_datasets) > 0, "No training datasets specified"
+
+        log.info('Train datasets: ' + ', '.join(train_datasets))
+
+        dataset = MultiModalDataset([], [load_audio_data(cfg, cfg.data.get(dataset)) for dataset in train_datasets])
+
+        # audiocaps_npz = load_audio_data(cfg, cfg.data.AudioCaps_npz) 
         # !TODO: think of a better way to handle different datasets
         
         # freesound1_npz = load_audio_data_npz(cfg, cfg.data.FreeSound1_npz)
@@ -54,7 +61,7 @@ def setup_training_datasets(cfg: DictConfig) -> tuple[Dataset, DistributedSample
         # bbcsound_npz = load_audio_data_npz(cfg, cfg.data.BBCSound_npz)
         # clotho_npz = load_audio_data_npz(cfg, cfg.data.Clotho_npz)
 
-        dataset = MultiModalDataset([], [audiocaps_npz]) 
+        # dataset = MultiModalDataset([], [audiocaps_npz]) 
         # dataset = MultiModalDataset([], [audiocaps_npz]*cfg.ac_oversample_rate + [audioset_sl_npz, bbcsound_npz, clotho_npz,  
         #                                                                         freesound1_npz, freesound2_npz, freesound3_npz])
         
@@ -89,7 +96,17 @@ def setup_test_datasets(cfg):  # used in sample
 
 
 def setup_val_datasets(cfg: DictConfig) -> tuple[Dataset, DataLoader, DataLoader]:
-    dataset = load_audio_data(cfg, cfg.data.AudioCaps_val_npz)
+    val_dataset = cfg.use_data.get('val', [])
+    assert len(val_dataset) == 1, "Need to specify exactly one validation dataset" # TODO is more necessary?
+    val_dataset = val_dataset[0]
+
+    log.info('Validation dataset: ' + val_dataset)
+
+    val_cfg = cfg.data.get(val_dataset)
+
+    dataset = load_audio_data(cfg, val_cfg)
+
+    #dataset = load_audio_data(cfg, cfg.data.AudioCaps_val_npz)
 
     val_batch_size = cfg.batch_size
     val_eval_batch_size = cfg.eval_batch_size
@@ -108,7 +125,7 @@ def setup_val_datasets(cfg: DictConfig) -> tuple[Dataset, DataLoader, DataLoader
                                       drop_last=False,
                                       pin_memory=pin_memory)
 
-    return dataset, val_loader, eval_loader
+    return val_cfg, dataset, val_loader, eval_loader
 
 
 def error_avoidance_collate(batch):

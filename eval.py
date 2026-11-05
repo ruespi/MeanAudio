@@ -37,6 +37,7 @@ def main():
     parser.add_argument('--seed', type=int, help='Random seed', default=42)
     parser.add_argument('--full_precision', action='store_true')
     parser.add_argument('--model_path', type=str, help='Ckpt path of trained model')
+    parser.add_argument('--eval_captions', type=Path, help="Path to evaluation dataset captions file")
     parser.add_argument('--encoder_name', choices=['clip', 't5', 't5_clap'], type=str, help='text encoder name')
     parser.add_argument('--use_rope', action='store_true', help='Whether or not use position embedding for model')
     parser.add_argument('--text_c_dim', type=int, default=512, 
@@ -100,8 +101,7 @@ def main():
     seq_cfg.duration = duration
     net.update_seq_lengths(seq_cfg.latent_seq_len)
 
-    # TODO change this
-    eval_file =  './data/musiccaps/musiccaps-captions-eval.tsv' 
+    eval_file = args.eval_captions
     audio_ids=[]  
     text_prompts=[]
     with open(eval_file, 'r') as f:

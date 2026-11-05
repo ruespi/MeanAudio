@@ -1,8 +1,18 @@
-# yt8m
-YT8M_npz:
-  tag: train/
-  tsv: # TODO
-  npz_dir: # TODO
+# Devset
+devset_train:
+  tag: train
+  tsv: data/meanaudio/dev/devset-train-npz.tsv
+  npz_dir: data/meanaudio/dev/devset-train-npz
+  output_subdir: null
+  repa_npz_dir: null
+
+devset_val:
+  tag: val
+  tsv: data/meanaudio/dev/devset-val-npz.tsv
+  npz_dir: data/meanaudio/dev/devset-val-npz
+  output_subdir: null
+  repa_npz_dir: null
+  gt_cache: data/meanaudio/dev/val_gt_cache
 
 # MusicCaps
 MusicCaps_npz:

@@ -15,7 +15,7 @@ from omegaconf import DictConfig
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 from meanaudio.model.flow_matching import FlowMatching
-from meanaudio.model.mean_flow import MeanFlow
+from meanaudio.model.mean_flow import MeanFlow, iMeanFlow
 from meanaudio.model.networks import get_mean_audio
 from meanaudio.model.sequence_config import CONFIG_16K, CONFIG_44K
 from meanaudio.model.utils.features_utils import FeaturesUtils
@@ -40,14 +40,15 @@ class RunnerMeanFlow:
         self.enable_grad_scaler = cfg.enable_grad_scaler
         self.for_training = for_training
         self.cfg = cfg
+        self.mode = cfg.get("meanflow_mode", "meanflow")
         self.use_wandb = cfg.get("use_wandb", False)
 
         if self.use_wandb and local_rank == 0: 
             wandb.init(
-                project = "MeanAudio", 
-                name = cfg.exp_id, 
-                settings=wandb.Settings(init_timeout=120),
-                # config = cfg
+                project = "Thesis", 
+                name = f"MeanAudio-{cfg.exp_id}", 
+                settings=wandb.Settings(init_timeout=120)
+               # config = cfg
             )
 
         # sequence config
@@ -89,7 +90,7 @@ class RunnerMeanFlow:
             self.train_fn = torch.compile(self.train_fn)
             self.val_fn = torch.compile(self.val_fn)
 
-        self.mf = MeanFlow()
+        self.mf = iMeanFlow() if self.mode == "imeanflow" else MeanFlow()
         
         # ema profile
         if for_training and cfg.ema.enable and local_rank == 0:
@@ -225,6 +226,9 @@ class RunnerMeanFlow:
         bs = x1.shape[0]  # batch_size * seq_len * num_channels
 
         x1 = self.network.module.normalize(x1)
+
+        # text_f = text features
+        # text_f_c = text caption features
 
         text_f_undrop = text_f
         text_f_c_undrop = text_f_c

@@ -97,9 +97,8 @@ def train(cfg: DictConfig):
     info_if_rank_zero(log, f'Number of training samples: {len(dataset)}')
     info_if_rank_zero(log, f'Number of training batches: {len(loader)}')
 
-    val_dataset, val_loader, eval_loader = setup_val_datasets(cfg)  # same dataset (val_dataset) but with different dataloader
+    val_cfg, val_dataset, val_loader, eval_loader = setup_val_datasets(cfg)  # same dataset (val_dataset) but with different dataloader
     info_if_rank_zero(log, f'Number of val samples: {len(val_dataset)}')
-    val_cfg = cfg.data.AudioCaps_val_npz  # tsv and memmap dir 
 
     # compute and set mean and std
     latent_mean, latent_std = torch.load(cfg.data.latent_mean), torch.load(cfg.data.latent_std)
@@ -221,6 +220,7 @@ def train(cfg: DictConfig):
                     distributed.barrier()
                     trainer.rng.graphsafe_set_state(train_rng_snapshot)
                     trainer.eval(audio_path, curr_iter, val_cfg)   # av-bench eval
+
 
                 curr_iter += 1
 

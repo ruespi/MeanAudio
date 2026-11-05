@@ -1,6 +1,7 @@
 data
 weights
 av-benchmark
+exps
 
 uv.lock
 .python-version

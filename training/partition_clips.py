@@ -62,7 +62,8 @@ for audio_file in tqdm(audio_files):
     for i in range(num_segments):
         start_sample = i * segment_interval
         end_sample = start_sample + segment_length  # num of points before resampling
-        audio_id = f'{audio_name}_{i}'
+        # audio_id = f'{audio_name}_{i}'
+        audio_id = f'{audio_name}'
         output_data.append((audio_id, audio_name, start_sample, end_sample))
 
 output_dir.parent.mkdir(parents=True, exist_ok=True)

@@ -13,6 +13,9 @@ column_limit = 100
 [tool.isort]
 line_length = 100
 
+[tool.uv.sources]
+av-bench = { path = "av-benchmark", editable = true }
+
 [project]
 name = "meanaudio"
 version = "1.0.0"
@@ -26,7 +29,7 @@ classifiers = [
 ]
 dependencies = [
   'torch >= 2.5.1',
-  'huggingface_hub >= 0.26',
+  'huggingface_hub >= 0.26, <1.0.0',
   'cython',
   'gitpython >= 3.1',
   'tensorboard >= 2.11',
@@ -49,9 +52,11 @@ dependencies = [
   'av >= 14.0.1',
   'timm >= 1.0.12',
   'python-dotenv',
-  'transformers',
+  'transformers>=4.22',
   'debugpy',
-  'laion-clap @ git+https://github.com/hkchengrex/CLAP.git'
+  'laion-clap @ git+https://github.com/hkchengrex/CLAP.git',
+  "torchaudio==2.8.*",
+  "av-bench",
 ]
 
 [tool.hatch.build.targets.wheel]
